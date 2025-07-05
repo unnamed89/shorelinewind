@@ -1,5 +1,6 @@
 package com.meacer.shorelinewind.complication
 
+import android.util.Log
 import androidx.wear.watchface.complications.data.ComplicationData
 import androidx.wear.watchface.complications.data.ComplicationType
 import androidx.wear.watchface.complications.data.PlainComplicationText
@@ -20,19 +21,18 @@ import java.text.DecimalFormat
  */
 class MainComplicationService : SuspendingComplicationDataSourceService() {
 
-    // IMPORTANT: Replace these with your actual credentials from tempestwx.com
-    private val API_TOKEN = "6bff2f89-84ab-463c-886e-fc0f443da4cf"
-    private val DEVICE_ID = "389493"
-    private val AVG_WIND_SPEED_KEY = 2
-    // Sample url:
-    // https://swd.weatherflow.com/swd/rest/observations?callback=jQuery224011556950892581941_1751337590228&api_key=6bff2f89-84ab-463c-886e-fc0f443da4cf&build=156&device_id=389493&bucket=b&time_start=1750905590&time_end=1751337590&_=1751337590229
-    private val TEMPEST_URL = URL("https://swd.weatherflow.com/swd/rest/observations?api_key=$API_TOKEN&build=156&device_id=$DEVICE_ID&bucket=b")
+    private final val TAG = "MainComplicationService"
+
+    private final val API_TOKEN = "insert your api token here."
+    private final val DEVICE_ID = "389493"
+    private final val AVG_WIND_SPEED_KEY = 2
+    private final val TEMPEST_URL = URL("https://swd.weatherflow.com/swd/rest/observations?api_key=$API_TOKEN&build=156&device_id=$DEVICE_ID&bucket=b")
 
     override fun getPreviewData(type: ComplicationType): ComplicationData? {
         if (type != ComplicationType.SHORT_TEXT) {
             return null
         }
-        return createComplicationData("Mon", "Monday")
+        return createComplicationData("Wind", "Wind Speed")
     }
 
     override suspend fun onComplicationRequest(request: ComplicationRequest): ComplicationData {
@@ -57,8 +57,6 @@ class MainComplicationService : SuspendingComplicationDataSourceService() {
         if (observations.length() > 0) {
             val latestObservation = observations.getJSONArray(0)
             val windSpeed = latestObservation.getDouble(AVG_WIND_SPEED_KEY)
-
-            println("Got wind speed: $windSpeed")
             return windSpeed
         }
         throw IOException("No observation data found in JSON")
@@ -79,6 +77,8 @@ class MainComplicationService : SuspendingComplicationDataSourceService() {
                     val windSpeedInMetersPerSecond = parseWindSpeedInMetersPerSeconds(jsonString)
                     val windSpeedInKnots = windSpeedInMetersPerSecond * 1.94384
 
+//                    println("Got wind speed: $windSpeedInKnots")
+                    Log.e(TAG,"Got wind speed: $$windSpeedInKnots")
                     val df = DecimalFormat("\uD83C\uDFC4 #.#")
                     df.roundingMode = RoundingMode.HALF_UP
                     return@withContext df.format(windSpeedInKnots)
