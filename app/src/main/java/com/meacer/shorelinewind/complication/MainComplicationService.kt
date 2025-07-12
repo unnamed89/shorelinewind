@@ -43,7 +43,7 @@ class MainComplicationService : SuspendingComplicationDataSourceService() {
     private fun createComplicationData(text: String, contentDescription: String): ShortTextComplicationData {
         val now = Instant.now()
         // Use a longer validity period to prevent disappearing
-        val fiveMinutesLater = now.plus(Duration.ofMinutes(1))
+        val fiveMinutesLater = now.plus(Duration.ofMinutes(5))
 
         return ShortTextComplicationData.Builder(
             text = PlainComplicationText.Builder(text).build(),

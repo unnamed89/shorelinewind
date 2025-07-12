@@ -7,14 +7,15 @@ import java.math.RoundingMode
 import java.net.HttpURLConnection
 import java.net.URL
 import java.text.DecimalFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class WindSpeed {
 
     companion object {
         private final val TAG = "WindSpeed"
 
-//        private final val API_TOKEN = "insert your api token here."
-        private final val API_TOKEN = "6bff2f89-84ab-463c-886e-fc0f443da4cf"
+        private final val API_TOKEN = "insert your api token here."
         private final val DEVICE_ID = "389493"
         private final val AVG_WIND_SPEED_KEY = 2
         private final val TEMPEST_URL = URL("https://swd.weatherflow.com/swd/rest/observations?api_key=$API_TOKEN&build=156&device_id=$DEVICE_ID&bucket=b")
@@ -34,6 +35,7 @@ class WindSpeed {
         public fun fetchWindSpeed(): String {
 //            testCounter++;
 //            return "\uD83C\uDFC4 Test " + testCounter;
+
             var connection: HttpURLConnection? = null
             try {
                 Log.d(TAG, "Fetching wind speed: $TEMPEST_URL")
@@ -47,9 +49,15 @@ class WindSpeed {
                     val windSpeedInKnots = windSpeedInMetersPerSecond * 1.94384
 
                     Log.d(TAG, "Got wind speed: $windSpeedInKnots knots")
+
+                    // Get the current date and time
+                    val now = LocalDateTime.now()
+                    val formatter = DateTimeFormatter.ofPattern("HH:mm")
+                    val formattedTime = now.format(formatter)
+
                     val df = DecimalFormat("🏄 #.#")
                     df.roundingMode = RoundingMode.HALF_UP
-                    return df.format(windSpeedInKnots)
+                    return df.format(windSpeedInKnots) + " " + formattedTime
                 } else {
                     Log.e(TAG, "HTTP Error: ${connection.responseCode}")
                     throw IOException("HTTP Error: ${connection.responseCode}")
