@@ -26,8 +26,12 @@
                 android:value="SHORT_TEXT" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="60" />
         </service>
+        <service
+            android:name=".complication.WindUpdateService"
+            android:enabled="true"
+            android:exported="false" />
 <!--        <service-->
 <!--            android:name=".tile.MainTileService"-->
 <!--            android:exported="true"-->

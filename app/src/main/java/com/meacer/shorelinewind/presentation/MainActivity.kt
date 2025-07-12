@@ -24,7 +24,9 @@ import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.TimeText
 import androidx.wear.tooling.preview.devices.WearDevices
 import com.meacer.shorelinewind.R
+import com.meacer.shorelinewind.complication.WindUpdateService;
 import com.meacer.shorelinewind.presentation.theme.ShorelineWindTheme
+import android.content.Intent
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,6 +35,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setTheme(android.R.style.Theme_DeviceDefault)
+
+        // In your MainActivity onCreate() or wherever appropriate
+        val intent = Intent(this, WindUpdateService::class.java)
+        startService(intent)
 
         setContent {
             WearApp("Android")

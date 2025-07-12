@@ -15,6 +15,9 @@ import java.math.RoundingMode
 import java.net.HttpURLConnection
 import java.net.URL
 import java.text.DecimalFormat
+import androidx.wear.watchface.complications.data.TimeRange
+import java.time.Duration
+import java.time.Instant
 
 /**
  * Skeleton for complication data source that returns short text.
@@ -37,12 +40,24 @@ class MainComplicationService : SuspendingComplicationDataSourceService() {
         return createComplicationData("Wind", "Shoreline Lake Wind Speed")
     }
 
-    private fun createComplicationData(text: String, contentDescription: String) =
-        ShortTextComplicationData.Builder(
+    private fun createComplicationData(text: String, contentDescription: String): ShortTextComplicationData {
+        val now = Instant.now()
+        // Use a longer validity period to prevent disappearing
+        val fiveMinutesLater = now.plus(Duration.ofMinutes(1))
+
+        return ShortTextComplicationData.Builder(
             text = PlainComplicationText.Builder(text).build(),
             contentDescription = PlainComplicationText.Builder(contentDescription).build()
-        ).build()
-
+        ).apply {
+            // Set a 5-minute validity period to prevent disappearing
+            setValidTimeRange(
+                TimeRange.between(
+                    startInstant = now,
+                    endInstant = fiveMinutesLater
+                )
+            )
+        }.build()
+    }
 
     /**
      * Fetches and parses the temperature from the Tempest API.

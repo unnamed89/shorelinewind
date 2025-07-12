@@ -13,7 +13,8 @@ class WindSpeed {
     companion object {
         private final val TAG = "WindSpeed"
 
-        private final val API_TOKEN = "insert your api token here."
+//        private final val API_TOKEN = "insert your api token here."
+        private final val API_TOKEN = "6bff2f89-84ab-463c-886e-fc0f443da4cf"
         private final val DEVICE_ID = "389493"
         private final val AVG_WIND_SPEED_KEY = 2
         private final val TEMPEST_URL = URL("https://swd.weatherflow.com/swd/rest/observations?api_key=$API_TOKEN&build=156&device_id=$DEVICE_ID&bucket=b")
@@ -31,8 +32,8 @@ class WindSpeed {
         }
 
         public fun fetchWindSpeed(): String {
-            testCounter++;
-            return "AAA " + testCounter;
+//            testCounter++;
+//            return "\uD83C\uDFC4 Test " + testCounter;
             var connection: HttpURLConnection? = null
             try {
                 Log.d(TAG, "Fetching wind speed: $TEMPEST_URL")
